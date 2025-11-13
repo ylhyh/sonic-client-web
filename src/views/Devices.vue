@@ -804,17 +804,30 @@ onUnmounted(() => {
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
+          prop="wsScheme"
+          label="Scheme"
+          align="center"
+          show-overflow-tooltip
+          width="80"
+        ></el-table-column>
+        <el-table-column
           prop="host"
           label="Host"
           align="center"
           show-overflow-tooltip
-          width="150"
+          width="200"
         ></el-table-column>
         <el-table-column
           prop="port"
-          label="Port"
+          label="Listen Port"
           align="center"
-          width="90"
+          width="110"
+        ></el-table-column>
+        <el-table-column
+          prop="servicePort"
+          label="Service Port"
+          align="center"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="systemType"

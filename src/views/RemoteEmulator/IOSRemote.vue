@@ -175,7 +175,7 @@ defineProps({
 const tabWebView = (port, id, transTitle) => {
   title.value = transTitle;
   isWebView.value = false;
-  iframeUrl.value = `/chrome/devtools/inspector.html?ws=${agent.value.host}:${agent.value.port}/websockets/webView/${agent.value.secretKey}/${port}/${id}`;
+  iframeUrl.value = `/chrome/devtools/inspector.html?${agent.value.wsScheme}=${agent.value.host}:${agent.value.servicePort}/websockets/webView/${agent.value.secretKey}/${port}/${id}`;
   nextTick(() => {
     iFrameHeight.value = document.body.clientHeight - 180;
   });
@@ -499,20 +499,20 @@ const setImgData = (data) => {
   };
   isShowImg.value = true;
 };
-const openSocket = (host, port, key, udId) => {
+const openSocket = (wsScheme, host, port, key, udId) => {
   if ('WebSocket' in window) {
     websocket = new WebSocket(
-      `ws://${host}:${port}/websockets/ios/${key}/${udId}/${localStorage.getItem(
+      `${wsScheme}://${host}:${port}/websockets/ios/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`
     );
     terminalWebsocket = new WebSocket(
-      `ws://${host}:${port}/websockets/ios/terminal/${key}/${udId}/${localStorage.getItem(
+      `${wsScheme}://${host}:${port}/websockets/ios/terminal/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`
     );
     screenWebsocket = new WebSocket(
-      `ws://${host}:${port}/websockets/ios/screen/${key}/${udId}/${localStorage.getItem(
+      `${wsScheme}://${host}:${port}/websockets/ios/screen/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`
     );
@@ -1257,7 +1257,9 @@ const getDeviceById = (id) => {
             agent.value = resp.data;
             openSocket(
               agent.value.host,
+              agent.value.wsScheme,
               agent.value.port,
+              agent.value.servicePort,
               agent.value.secretKey,
               device.value.udId
             );

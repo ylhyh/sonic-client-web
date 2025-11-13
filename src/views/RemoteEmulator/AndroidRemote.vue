@@ -243,7 +243,7 @@ defineProps({
 const tabWebView = (port, id, transTitle) => {
   title.value = transTitle;
   isWebView.value = false;
-  iframeUrl.value = `/chrome/devtools/inspector.html?ws=${agent.value.host}:${agent.value.port}/websockets/webView/${agent.value.secretKey}/${port}/${id}`;
+  iframeUrl.value = `/chrome/devtools/inspector.html?${agent.value.wsScheme}=${agent.value.host}:${agent.value.servicePort}/websockets/webView/${agent.value.secretKey}/${port}/${id}`;
   nextTick(() => {
     iFrameHeight.value = document.body.clientHeight - 150;
   });
@@ -498,17 +498,17 @@ const setImgData = () => {
   };
   isShowImg.value = true;
 };
-const openSocket = (host, port, key, udId) => {
+const openSocket = (wsScheme, host, port, key, udId) => {
   if ('WebSocket' in window) {
     //
     websocket = new WebSocket(
-      `ws://${host}:${port}/websockets/android/${key}/${udId}/${localStorage.getItem(
+      `${wsScheme}://${host}:${port}/websockets/android/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`
     );
     //
     __Scrcpy = new Scrcpy({
-      socketURL: `ws://${host}:${port}/websockets/android/screen/${key}/${udId}/${localStorage.getItem(
+      socketURL: `${wsScheme}://${host}:${port}/websockets/android/screen/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`,
       node: 'scrcpy-video',
@@ -519,7 +519,7 @@ const openSocket = (host, port, key, udId) => {
     changeScreenMode(screenMode.value, 1);
     //
     terminalWebsocket = new WebSocket(
-      `ws://${host}:${port}/websockets/android/terminal/${key}/${udId}/${localStorage.getItem(
+      `${wsScheme}://${host}:${port}/websockets/android/terminal/${key}/${udId}/${localStorage.getItem(
         'SonicToken'
       )}`
     );
@@ -1670,8 +1670,9 @@ const getDeviceById = (id) => {
           if (resp.code === 2000) {
             agent.value = resp.data;
             openSocket(
+              agent.value.wsScheme,
               agent.value.host,
-              agent.value.port,
+              agent.value.servicePort,
               agent.value.secretKey,
               device.value.udId
             );
@@ -1688,7 +1689,7 @@ const isConnectAudio = ref(false);
 const initAudioPlayer = () => {
   audioPlayer = new AudioProcessor({
     node: 'audio-player',
-    wsUrl: `ws://${agent.value.host}:${agent.value.port}/websockets/audio/${agent.value.secretKey}/${device.value.udId}`,
+    wsUrl: `${agent.value.wsScheme}://${agent.value.host}:${agent.value.servicePort}/websockets/audio/${agent.value.secretKey}/${device.value.udId}`,
     onReady() {
       isConnectAudio.value = true;
     },
