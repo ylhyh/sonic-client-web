@@ -1256,9 +1256,8 @@ const getDeviceById = (id) => {
           if (resp.code === 2000) {
             agent.value = resp.data;
             openSocket(
-              agent.value.host,
               agent.value.wsScheme,
-              agent.value.port,
+              agent.value.host,
               agent.value.servicePort,
               agent.value.secretKey,
               device.value.udId
